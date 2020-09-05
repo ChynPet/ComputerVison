@@ -31,7 +31,7 @@ while True:
         break
 
     # show image
-    cv2.imshow('Press ESC - for quite. SPACE - for write frame to video', frame)
+    cv2.imshow('Press ESC - for quite. SPACE - for write frame to video. P or p play video', frame)
 
     # key for create a frame for a video sequence or output
     k = cv2.waitKey(1)
@@ -91,7 +91,7 @@ while True:
                 logging.warning("Can't read frame from 'output.avi'")
                 break
 
-            cv2.imshow('Playing video', frame)
+            cv2.imshow('Playing video. q for quit', frame)
 
             # exit check
             if cv2.waitKey(1) % 256 == 113:
