@@ -26,9 +26,9 @@ while True:
         break
 
     # show image
-    cv2.imshow('Press ESC - for quite. SPACE - for snaphot', frame)
+    cv2.imshow('Press ESC - for quite. SPACE - for snapshot', frame)
 
-    # key for snaphot or quit
+    # key for snapshot or quit
     k = cv2.waitKey(1)
     if k % 256 == 27:
         # ESC pressed for quit
