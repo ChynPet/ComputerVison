@@ -12,6 +12,8 @@ webcam = cv2.VideoCapture(0)
 
 fourcc = cv2.VideoWriter_fourcc(*CODEC)
 out = cv2.VideoWriter('output.avi', fourcc, 15.0, (640, 480), False)
+# flag to track or play video
+flag_played_video = False
 
 while True:
     # if webcam is opened
@@ -35,10 +37,16 @@ while True:
     k = cv2.waitKey(1)
     if k % 256 == 27:
         # ESC pressed for quit
+
         logging.info('Escape hit, closing...')
         break
     elif k % 256 == 32:
         # SPACE pressed for create a frame for a video sequence
+
+        # if a video was played, to create a new object and rewrite the file for video
+        if flag_played_video:
+            flag_played_video = False
+            out = cv2.VideoWriter('output.avi', fourcc, 15.0, (640, 480), False)
 
         # get width and height for points rectangle and line
         height, width = frame.shape[:2]
@@ -64,6 +72,34 @@ while True:
         cv2.imshow('photo', gray_frame)
         # write the frame to the video sequence
         out.write(gray_frame)
+    elif k % 256 == 112 or k % 256 == 80:
+        # P or p play video, which was written
+
+        flag_played_video = True
+
+        # if a video was recorded, complete it
+        if out.isOpened():
+            out.release()
+
+        video = cv2.VideoCapture('output.avi')
+
+        while video.isOpened():
+            ret, frame = video.read()
+
+            # if frame is read correctly ret is True
+            if not ret:
+                logging.warning("Can't read frame from 'output.avi'")
+                break
+
+            cv2.imshow('Playing video', frame)
+
+            # exit check
+            if cv2.waitKey(1) % 256 == 113:
+                break
+
+        # release capture
+        video.release()
+
 
 # close everything
 webcam.release()
