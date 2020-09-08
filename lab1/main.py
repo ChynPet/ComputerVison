@@ -56,13 +56,24 @@ while True:
         colors_rectangle = (0, 255, 0)
         colors_line = (255, 0, 0)
         thickness = 5
+        # canvas for draw rectangle and line
+        canvas = np.zeros((height, width, 3), np.uint8)
 
-        # draw rectangle on image
-        cv2.rectangle(gray_img, A1_up_left, A2_down_right, colors_rectangle, thickness)
-        # draw line on image
-        cv2.line(gray_img, A1_up_left, A2_down_right, colors_line, thickness)
+        # draw rectangle on canvas
+        cv2.rectangle(canvas, A1_up_left, A2_down_right, colors_rectangle, thickness, cv2.LINE_AA)
+        # draw line on canvas
+        cv2.line(canvas, A1_up_left, A2_down_right, colors_line, thickness)
 
-        cv2.imshow(img_name, gray_img)
+        # geting mask for draw color rectangle and line on gray image
+        canvas_gray = cv2.cvtColor(canvas, cv2.COLOR_BGR2GRAY)
+        ret, mask = cv2.threshold(canvas_gray, 10, 255, cv2.THRESH_BINARY)
+        mask_inv = cv2.bitwise_not(mask)
+
+        gray_img_bitwise = cv2.bitwise_and(gray_img, gray_img, mask = mask_inv)
+        canvas_bitwise = cv2.bitwise_and(canvas, canvas, mask = mask)
+
+        res = canvas_bitwise + gray_img_bitwise[:,:, np.newaxis]
+        cv2.imshow(img_name, res)
         img_count += 1
 
 # close everything

@@ -11,7 +11,7 @@ logging.basicConfig(filename=LOGFILE, level='DEBUG')
 webcam = cv2.VideoCapture(0)
 
 fourcc = cv2.VideoWriter_fourcc(*CODEC)
-out = cv2.VideoWriter('output.avi', fourcc, 15.0, (640, 480), False)
+out = cv2.VideoWriter('output.avi', fourcc, 15.0, (640, 480))
 # flag to track or play video
 flag_played_video = False
 
@@ -46,7 +46,7 @@ while True:
         # if a video was played, to create a new object and rewrite the file for video
         if flag_played_video:
             flag_played_video = False
-            out = cv2.VideoWriter('output.avi', fourcc, 15.0, (640, 480), False)
+            out = cv2.VideoWriter('output.avi', fourcc, 15.0, (640, 480))
 
         # get width and height for points rectangle and line
         height, width = frame.shape[:2]
@@ -60,18 +60,29 @@ while True:
         colors_rectangle = (0, 255, 0)
         colors_line = (255, 0, 0)
         thickness = 5
+        # canvas for draw rectangle and line
+        canvas = np.zeros((height, width, 3), np.uint8)
 
         # convert frame to grayscale
         gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        # draw rectangle on frame
-        cv2.rectangle(gray_frame, A1_up_left, A2_down_right, colors_rectangle, thickness)
+        # draw rectangle on canvas
+        cv2.rectangle(canvas, A1_up_left, A2_down_right, colors_rectangle, thickness)
         # draw line on frame
-        cv2.line(gray_frame, A1_up_left, A2_down_right, colors_line, thickness)
+        cv2.line(canvas, A1_up_left, A2_down_right, colors_line, thickness)
 
-        cv2.imshow('photo', gray_frame)
+        # geting mask for draw color rectangle and line on gray image
+        canvas_gray = cv2.cvtColor(canvas, cv2.COLOR_BGR2GRAY)
+        ret, mask = cv2.threshold(canvas_gray, 10, 255, cv2.THRESH_BINARY)
+        mask_inv = cv2.bitwise_not(mask)
+
+        gray_frame_bitwise = cv2.bitwise_and(gray_frame, gray_frame, mask=mask_inv)
+        canvas_bitwise = cv2.bitwise_and(canvas, canvas, mask=mask)
+
+        res = canvas_bitwise + gray_frame_bitwise[:, :, np.newaxis]
+        cv2.imshow('photo', res)
         # write the frame to the video sequence
-        out.write(gray_frame)
+        out.write(res)
     elif k % 256 == 112 or k % 256 == 80:
         # P or p play video, which was written
 
