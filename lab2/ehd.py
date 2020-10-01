@@ -139,7 +139,6 @@ class EHD:
     def train(self, train_images):
 
         self.local_X_train = []
-
         self.y_train = []
         self.X_train_name = []
         self.time_train = []
