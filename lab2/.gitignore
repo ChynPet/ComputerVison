@@ -1,0 +1,12 @@
+.idea
+data_first
+data_second
+__pycache__
+img/.inside
+result/result_train_mod.csv
+result/result_test_mod.csv
+img.tar.xz
+data.tar.xz
+train_set.rar
+ehd_v001.py
+name.txt
