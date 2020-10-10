@@ -1,6 +1,4 @@
 .idea
-data_first
-data_second
 __pycache__
 img/.inside
 result/result_train_mod.csv
