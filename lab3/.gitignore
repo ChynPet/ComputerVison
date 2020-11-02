@@ -1,0 +1,13 @@
+.idea
+.ipynb_checkpoints
+convert_to_image.py
+model.h5
+model.json
+bananka
+scorpions
+pinginus
+pin_ban.avi
+scor_ban.avi
+scor_pin.avi
+test.mp4
+tmp.csv
